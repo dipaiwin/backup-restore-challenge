@@ -1,0 +1,5 @@
+# Ignore everything
+*
+
+# Except for
+!./backup_restore.py
