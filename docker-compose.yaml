@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:15.0
+    environment:
+      POSTGRES_PASSWORD: ${DB_USER_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+  restore:
+    image: myregistry/myuser/backup-restore:1.0.0
+    depends_on:
+      db:
+        condition: service_healthy
+    build: .
+    environment:
+      ACCESS_TOKEN: ${ACCESS_TOKEN}
+      DB_USER_PASSWORD: ${DB_USER_PASSWORD}
+networks:
+  default:
+    name: my-network
